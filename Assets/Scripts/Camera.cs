@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public static WorldGeneration.WorldParameters worldParameters;
+    private static GameController.WorldParameters worldParameters;
+
+
     Camera thiscamera;
     Transform thistransform;
 
-    private void Awake()
+    private void Start()
     {
         thiscamera = GetComponent<Camera>();
-        thistransform = GetComponent<Transform>();
-        thistransform.position = new Vector3((int)worldParameters.width / 2, (int)worldParameters.length / 2, -10);
+        Camera.worldParameters = GameController.worldParameters;
+        Vector3 middle = new Vector3((int)worldParameters.width / 2, (int)worldParameters.length / 2, -10);
+        thiscamera.transform.position = middle;
+        Debug.Log("test");
     }
 
     // Update is called once per frame
