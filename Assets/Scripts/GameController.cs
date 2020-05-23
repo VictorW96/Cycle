@@ -17,11 +17,13 @@ public class GameController : MonoBehaviour
     }
 
     public static WorldParameters worldParameters;
+    public static Vector3 gridCellSize;
 
 
     // Start is called before the first frame update
     private void Awake()
     {
+        gridCellSize = worldGrid.cellSize;
         using (StreamReader r = new StreamReader("./Raw/WorldGeneration.json"))
             {
                 string jsonParameters = r.ReadToEnd();
