@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -7,7 +8,7 @@ using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : NetworkBehaviour
 {
     public float panSpeed = 10f;
     public float panBorderThickness = 10f;
@@ -25,9 +26,14 @@ public class PlayerCamera : MonoBehaviour
     private Camera cameraComponent;
     private void Start()
     {
+        
         worldParameters = GameController.worldParameters;
         gridCellSize = GameController.gridCellSize;
         cameraComponent = GetComponent<Camera>();
+
+        cameraComponent.enabled = false;
+        if (hasAuthority)
+            cameraComponent.enabled = true;
 
         panLimit = new Vector2(worldParameters.width*gridCellSize.x, worldParameters.length*gridCellSize.y);
 
@@ -37,9 +43,11 @@ public class PlayerCamera : MonoBehaviour
         transform.position = worldMiddle;
     }
 
-    // Update is called once per frame
+    [Client]
     void Update()
     {
+        if (!hasAuthority) { return; }
+
         Vector3 pos = transform.position;
 
         if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)

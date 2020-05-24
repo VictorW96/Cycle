@@ -30,6 +30,5 @@ public class GameController : MonoBehaviour
                 worldParameters = JsonConvert.DeserializeObject<WorldParameters>(jsonParameters);
             }
         Instantiate(worldGrid);
-        Instantiate(playerCamera);
     }
 }
