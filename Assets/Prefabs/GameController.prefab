@@ -45,5 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldGrid: {fileID: 4094066877814531431, guid: 277193fabbbf15c4496fa43ab87d0823,
     type: 3}
-  playerCamera: {fileID: 6988812824261307619, guid: bd2a1e38e1865ea4fb198c126dffa7a2,
+  playerCamera: {fileID: 8500511930244691449, guid: bd2a1e38e1865ea4fb198c126dffa7a2,
     type: 3}

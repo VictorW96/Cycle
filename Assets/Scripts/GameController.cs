@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public Grid worldGrid;
-    public GameObject playerCamera;
+    public Camera playerCamera;
 
     public class WorldParameters
     {
