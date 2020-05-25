@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b091e1c2881f4a4280793220a16ad04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   panSpeed: 10
   panBorderThickness: 10
   scrollSpeed: 4

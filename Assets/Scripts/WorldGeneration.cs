@@ -4,22 +4,54 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
+using Mirror;
+using System.IO;
+using Newtonsoft.Json;
 
-public class WorldGeneration : MonoBehaviour
+public class WorldGeneration : NetworkBehaviour
 {
+
+    public class WorldParameters
+    {
+        public int width;
+        public int length;
+
+    }
+
+    public static WorldParameters worldParameters;
+    public Grid worldGrid;
+    public static Vector3 gridCellSize;
+    public Tile[] tileList;
+
     private Tilemap tilemap;
 
-    public Tile[] tileList;
-    public static GameController.WorldParameters worldParameters;
 
-
-    // Start is called before the first frame update
-    void Start()
+    public override void OnStartServer()
     {
-        WorldGeneration.worldParameters = GameController.worldParameters;
-        tilemap = GetComponent<Tilemap>();
-        tilemap.ClearAllTiles();
+        base.OnStartServer();
 
+        tilemap = GetComponent<Tilemap>();
+        worldGrid = tilemap.layoutGrid;
+        gridCellSize = worldGrid.cellSize;
+
+        tilemap.ClearAllTiles();
+        readWorldParameters();
+        generateWorld();
+        
+    }
+
+    private void readWorldParameters()
+    {
+        
+        using (StreamReader r = new StreamReader("./Raw/WorldGeneration.json"))
+        {
+            string jsonParameters = r.ReadToEnd();
+            worldParameters = JsonConvert.DeserializeObject<WorldParameters>(jsonParameters);
+        }
+    }
+
+    private void generateWorld()
+    {
         tilemap.size = new Vector3Int(worldParameters.width, worldParameters.length, 1);
         for (int i = 0; i < worldParameters.width; i++)
         {
@@ -30,12 +62,7 @@ public class WorldGeneration : MonoBehaviour
                 tilemap.SetTile(new Vector3Int(i, j, 0), randomTile);
             }
         }
-
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 }

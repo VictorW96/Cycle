@@ -17,7 +17,7 @@ public class PlayerCamera : NetworkBehaviour
     public float minSize = 2;
     public float maxSize = 8;
 
-    private static GameController.WorldParameters worldParameters;
+    private static WorldGeneration.WorldParameters worldParameters;
     private static Vector3 gridCellSize;
 
     private Vector3 worldMiddle;
@@ -27,8 +27,8 @@ public class PlayerCamera : NetworkBehaviour
     private void Start()
     {
         
-        worldParameters = GameController.worldParameters;
-        gridCellSize = GameController.gridCellSize;
+        worldParameters = WorldGeneration.worldParameters;
+        gridCellSize = WorldGeneration.gridCellSize;
         cameraComponent = GetComponent<Camera>();
 
         cameraComponent.enabled = false;
