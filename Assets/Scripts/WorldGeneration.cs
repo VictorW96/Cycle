@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 using Mirror;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class WorldGeneration : NetworkBehaviour
 {
@@ -19,6 +20,8 @@ public class WorldGeneration : NetworkBehaviour
     }
 
     public static WorldParameters worldParameters;
+
+
     public Grid worldGrid;
     public static Vector3 gridCellSize;
     public Tile[] tileList;
@@ -26,10 +29,8 @@ public class WorldGeneration : NetworkBehaviour
     private Tilemap tilemap;
 
 
-    public override void OnStartServer()
+    private void Awake()
     {
-        base.OnStartServer();
-
         tilemap = GetComponent<Tilemap>();
         worldGrid = tilemap.layoutGrid;
         gridCellSize = worldGrid.cellSize;
@@ -37,7 +38,6 @@ public class WorldGeneration : NetworkBehaviour
         tilemap.ClearAllTiles();
         readWorldParameters();
         generateWorld();
-        
     }
 
     private void readWorldParameters()

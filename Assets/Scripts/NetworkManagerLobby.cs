@@ -7,16 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManagerLobby : NetworkManager
 {
-    [SerializeField] private int minPlayers = 2;
-    [Scene] [SerializeField] private string menuScene = string.Empty;
+    [SerializeField] private int minPlayers = 1;
+    [SerializeField] private string menuScene = "Scene_Lobby";
 
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
+
+    [SerializeField] private PlayerCamera gamePlayerPrefab = null;
+
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
+    public List<PlayerCamera> GamePlayers { get; } = new List<PlayerCamera>();
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
 
@@ -110,6 +114,33 @@ public class NetworkManagerLobby : NetworkManager
         }
 
         return true;
+    }
+
+    public void StartGame()
+    {
+        if(SceneManager.GetActiveScene().name == menuScene)
+        {
+            if (!IsReadyToStart()) { return; }
+            ServerChangeScene("Scene/Game01Scene");
+        }
+    }
+
+    public override void ServerChangeScene(string newSceneName)
+    {
+        // From menu to game
+        if (SceneManager.GetActiveScene().name == menuScene && newSceneName.StartsWith("Scene/Game"))
+        {
+            for (int i = RoomPlayers.Count -1; i >=0; i--)
+            {
+                var conn = RoomPlayers[i].connectionToClient;
+                var gameplayerInstance = Instantiate(gamePlayerPrefab);
+                gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+
+                NetworkServer.Destroy(conn.identity.gameObject);
+                NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
+            }
+        }
+        base.ServerChangeScene(newSceneName);
     }
 }
 
