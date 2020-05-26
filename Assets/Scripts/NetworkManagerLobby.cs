@@ -13,16 +13,25 @@ public class NetworkManagerLobby : NetworkManager
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
 
-    [SerializeField] private PlayerCamera gamePlayerPrefab = null;
+    [Header("Game")]
+    [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
 
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
 
+    public GameObject PlayerCamera;
+
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
-    public List<PlayerCamera> GamePlayers { get; } = new List<PlayerCamera>();
+    public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+
+    private void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        base.Awake();
+    }
 
     public override void OnStartClient()
     {
@@ -127,8 +136,7 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void ServerChangeScene(string newSceneName)
     {
-        // From menu to game
-        if (SceneManager.GetActiveScene().name == menuScene && newSceneName.StartsWith("Scene/Game"))
+        if (newSceneName == "Scene/Game01Scene")
         {
             for (int i = RoomPlayers.Count -1; i >=0; i--)
             {
@@ -141,6 +149,21 @@ public class NetworkManagerLobby : NetworkManager
             }
         }
         base.ServerChangeScene(newSceneName);
+
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Game01Scene")
+        {
+            for (int i = GamePlayers.Count -1; i >= 0; i--)
+            {
+                var conn = GamePlayers[i].connectionToClient;
+                var playerCameraInstance = Instantiate(PlayerCamera);
+
+                NetworkServer.Spawn(playerCameraInstance, conn);
+            }
+        }
     }
 }
 

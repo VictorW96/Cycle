@@ -31,6 +31,8 @@ public class WorldGeneration : NetworkBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         tilemap = GetComponent<Tilemap>();
         worldGrid = tilemap.layoutGrid;
         gridCellSize = worldGrid.cellSize;

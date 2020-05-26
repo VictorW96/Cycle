@@ -549,6 +549,18 @@ PrefabInstance:
       propertyPath: minPlayers
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 782885963391065576, guid: 8d7ac1fb5434836429e66ffb1e415eca,
+        type: 3}
+      propertyPath: worldGrid
+      value: 
+      objectReference: {fileID: 8524047764711952089, guid: 277193fabbbf15c4496fa43ab87d0823,
+        type: 3}
+    - target: {fileID: 782885963391065576, guid: 8d7ac1fb5434836429e66ffb1e415eca,
+        type: 3}
+      propertyPath: gamePlayerPrefab
+      value: 
+      objectReference: {fileID: 6567042255860523298, guid: 43183683810c0fd4aba6655c5b494a45,
+        type: 3}
     - target: {fileID: 782885963391065578, guid: 8d7ac1fb5434836429e66ffb1e415eca,
         type: 3}
       propertyPath: m_Name

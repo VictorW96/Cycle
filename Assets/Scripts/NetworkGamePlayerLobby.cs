@@ -1,18 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class NetworkGamePlayerLobby : MonoBehaviour
+﻿using Mirror;
+public class NetworkGamePlayerLobby : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SyncVar]
+    private string displayName = "Loading...";
+
+    private NetworkManagerLobby room;
+    private NetworkManagerLobby Room
     {
-        
+        get
+        {
+            if (room != null) { return room; }
+            return room = NetworkManager.singleton as NetworkManagerLobby;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnStartClient()
     {
-        
+        DontDestroyOnLoad(gameObject);
+
+        Room.GamePlayers.Add(this);
+    }
+
+    public override void OnStopClient()
+    {
+        Room.GamePlayers.Remove(this);
+    }
+
+    [Server]
+    public void SetDisplayName(string displayName)
+    {
+        this.displayName = displayName;
     }
 }

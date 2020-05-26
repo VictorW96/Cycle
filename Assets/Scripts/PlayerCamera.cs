@@ -1,9 +1,4 @@
-﻿using JetBrains.Annotations;
-using Mirror;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.CompilerServices;
+﻿using Mirror;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -13,9 +8,6 @@ public class PlayerCamera : NetworkBehaviour
     public float panSpeed = 10f;
     public float panBorderThickness = 10f;
     public float scrollSpeed = 4f;
-
-    [SyncVar]
-    private string displayName = "Loading...";
 
     public float minSize = 2;
     public float maxSize = 8;
@@ -27,23 +19,6 @@ public class PlayerCamera : NetworkBehaviour
     private Vector2 panLimit;
 
     private Camera cameraComponent;
-
-    private NetworkManagerLobby room;
-    private NetworkManagerLobby Room
-    {
-        get
-        {
-            if (room != null) { return room; }
-            return room = NetworkManager.singleton as NetworkManagerLobby;
-        }
-    }
-
-    [Server]
-    public void SetDisplayName(string displayName)
-    {
-        this.displayName = displayName;
-    }
-
 
     [Client]
     void Update()
@@ -71,13 +46,6 @@ public class PlayerCamera : NetworkBehaviour
         float yCor = (worldParameters.length * gridCellSize[1]) / 2;
         worldMiddle = new Vector3(xCor, yCor, -1);
         transform.position = worldMiddle;
-
-        Room.GamePlayers.Add(this);
-    }
-
-    public override void OnNetworkDestroy()
-    {
-        Room.GamePlayers.Remove(this);
     }
 
     private void moveCamera()
