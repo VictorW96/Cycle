@@ -26,6 +26,8 @@ public class WorldGeneration : NetworkBehaviour
 
     public static Vector3 gridCellSize;
     public Tile[] tileList;
+
+    [SyncVar]
     public Tilemap tilemap;
 
     public override void OnStartServer()
