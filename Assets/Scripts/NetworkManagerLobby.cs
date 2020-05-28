@@ -22,6 +22,7 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientDisconnected;
 
     public GameObject PlayerCamera;
+
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 

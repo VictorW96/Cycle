@@ -28,10 +28,13 @@ public class WorldGeneration : NetworkBehaviour
     public Tile[] tileList;
 
     [SyncVar]
-    public Tilemap tilemap;
+    public GameObject TilemapGO;
+
+    private Tilemap tilemap;
 
     public override void OnStartServer()
     {
+        tilemap = TilemapGO.GetComponent<Tilemap>();
         tileGrid = tilemap.layoutGrid;
         gridCellSize = tileGrid.cellSize;
 
