@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Mirror.Examples.Basic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +22,11 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientDisconnected;
 
     public GameObject PlayerCamera;
-
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
 
-    private void Awake()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        base.Awake();
-    }
 
     public override void OnStartClient()
     {
@@ -60,12 +55,6 @@ public class NetworkManagerLobby : NetworkManager
     public override void OnServerConnect(NetworkConnection conn)
     {
         if (numPlayers >= maxConnections)
-        {
-            conn.Disconnect();
-            return;
-        }
-
-        if (SceneManager.GetActiveScene().name != menuScene)
         {
             conn.Disconnect();
             return;
@@ -136,6 +125,7 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void ServerChangeScene(string newSceneName)
     {
+        
         if (newSceneName == "Scene/Game01Scene")
         {
             for (int i = RoomPlayers.Count -1; i >=0; i--)
@@ -147,22 +137,28 @@ public class NetworkManagerLobby : NetworkManager
                 NetworkServer.Destroy(conn.identity.gameObject);
                 NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
             }
+            
         }
         base.ServerChangeScene(newSceneName);
 
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public override void OnServerSceneChanged(string sceneName)
     {
-        if(scene.name == "Game01Scene")
+        if (sceneName == "Scene/Game01Scene")
         {
-            for (int i = GamePlayers.Count -1; i >= 0; i--)
-            {
-                var conn = GamePlayers[i].connectionToClient;
-                var playerCameraInstance = Instantiate(PlayerCamera);
+            placeCameras();
+        }
+    }
 
-                NetworkServer.Spawn(playerCameraInstance, conn);
-            }
+    private void placeCameras()
+    {
+        for (int i = GamePlayers.Count - 1; i >= 0; i--)
+        {
+            var conn = GamePlayers[i].connectionToClient;
+            var gameplayerInstance = Instantiate(PlayerCamera);
+
+            NetworkServer.Spawn(gameplayerInstance.gameObject, conn);
         }
     }
 }

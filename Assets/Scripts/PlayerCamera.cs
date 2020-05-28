@@ -36,14 +36,10 @@ public class PlayerCamera : NetworkBehaviour
         gridCellSize = WorldGeneration.gridCellSize;
         cameraComponent = GetComponent<Camera>();
 
-        cameraComponent.enabled = false;
-        if (hasAuthority)
-            cameraComponent.enabled = true;
-
-        panLimit = new Vector2(worldParameters.width * gridCellSize.x, worldParameters.length * gridCellSize.y);
+        panLimit = new Vector2(worldParameters.width * gridCellSize.x, worldParameters.height * gridCellSize.y);
 
         float xCor = (worldParameters.width * gridCellSize[0]) / 2;
-        float yCor = (worldParameters.length * gridCellSize[1]) / 2;
+        float yCor = (worldParameters.height * gridCellSize[1]) / 2;
         worldMiddle = new Vector3(xCor, yCor, -1);
         transform.position = worldMiddle;
     }

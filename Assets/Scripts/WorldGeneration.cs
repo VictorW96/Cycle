@@ -15,31 +15,29 @@ public class WorldGeneration : NetworkBehaviour
     public class WorldParameters
     {
         public int width;
-        public int length;
+        public int height;
 
     }
-
     public static WorldParameters worldParameters;
 
 
-    public Grid worldGrid;
+    private UnityEngine.Grid tileGrid;
+    private Grid overlayGrid;
+
     public static Vector3 gridCellSize;
     public Tile[] tileList;
+    public Tilemap tilemap;
 
-    private Tilemap tilemap;
-
-
-    private void Awake()
+    public override void OnStartServer()
     {
-        DontDestroyOnLoad(gameObject);
-
-        tilemap = GetComponent<Tilemap>();
-        worldGrid = tilemap.layoutGrid;
-        gridCellSize = worldGrid.cellSize;
+        tileGrid = tilemap.layoutGrid;
+        gridCellSize = tileGrid.cellSize;
 
         tilemap.ClearAllTiles();
         readWorldParameters();
         generateWorld();
+
+
     }
 
     private void readWorldParameters()
@@ -54,17 +52,16 @@ public class WorldGeneration : NetworkBehaviour
 
     private void generateWorld()
     {
-        tilemap.size = new Vector3Int(worldParameters.width, worldParameters.length, 1);
+        tilemap.size = new Vector3Int(worldParameters.width, worldParameters.height, 1);
         for (int i = 0; i < worldParameters.width; i++)
         {
-            Debug.Log(i);
-            for (int j = 0; j < worldParameters.length; j++)
+            for (int j = 0; j < worldParameters.height; j++)
             {
                 Tile randomTile = tileList[Random.Range(0, tileList.Length)];
                 tilemap.SetTile(new Vector3Int(i, j, 0), randomTile);
             }
         }
+        overlayGrid = new Grid(worldParameters.width, worldParameters.height, gridCellSize.x, new Vector3(0,0,0));
     }
-
    
 }
