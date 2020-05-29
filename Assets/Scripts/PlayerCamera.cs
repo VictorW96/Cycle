@@ -3,7 +3,7 @@ using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class PlayerCamera : NetworkBehaviour
+public class PlayerCamera : MonoBehaviour
 {
     public float panSpeed = 10f;
     public float panBorderThickness = 10f;
@@ -12,7 +12,7 @@ public class PlayerCamera : NetworkBehaviour
     public float minSize = 2;
     public float maxSize = 8;
 
-    private static WorldGeneration.WorldParameters worldParameters;
+    private World world;
     private static Vector3 gridCellSize;
 
     private Vector3 worldMiddle;
@@ -20,26 +20,23 @@ public class PlayerCamera : NetworkBehaviour
 
     private Camera cameraComponent;
 
-    [Client]
     void Update()
     {
-        if (!hasAuthority) { return; }
-
         moveCamera();
-        
     }
 
-    public override void OnStartClient()
+    private void Start()
     {
-
-        worldParameters = WorldGeneration.worldParameters;
-        gridCellSize = WorldGeneration.gridCellSize;
+        world = World.Instance;
+        int width = world.worldParameters.width;
+        int height = world.worldParameters.height;
+        gridCellSize = world.gridCellSize;
         cameraComponent = GetComponent<Camera>();
 
-        panLimit = new Vector2(worldParameters.width * gridCellSize.x, worldParameters.height * gridCellSize.y);
+        panLimit = new Vector2(width* gridCellSize.x, height * gridCellSize.y);
 
-        float xCor = (worldParameters.width * gridCellSize[0]) / 2;
-        float yCor = (worldParameters.height * gridCellSize[1]) / 2;
+        float xCor = (width * gridCellSize[0]) / 2;
+        float yCor = (height * gridCellSize[1]) / 2;
         worldMiddle = new Vector3(xCor, yCor, -1);
         transform.position = worldMiddle;
     }
@@ -78,5 +75,5 @@ public class PlayerCamera : NetworkBehaviour
 
             transform.position = pos;
 
-        }
+    }
 }

@@ -22,6 +22,7 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientDisconnected;
 
     public GameObject PlayerCamera;
+    public GameObject worldGrid;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
@@ -148,20 +149,11 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (sceneName == "Scene/Game01Scene")
         {
-            placeCameras();
+            var worldGridInstance = Instantiate(worldGrid);
+            NetworkServer.Spawn(worldGridInstance);
         }
     }
 
-    private void placeCameras()
-    {
-        for (int i = GamePlayers.Count - 1; i >= 0; i--)
-        {
-            var conn = GamePlayers[i].connectionToClient;
-            var gameplayerInstance = Instantiate(PlayerCamera);
-
-            NetworkServer.Spawn(gameplayerInstance.gameObject, conn);
-        }
-    }
 }
 
 
