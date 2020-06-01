@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using UnityEditorInternal.VersionControl;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -9,8 +10,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class World : NetworkBehaviour
 {
-    public static event Action<NetworkConnection> worldGenerationDone;
-
     public static World _instance;
     public static World Instance
     {
@@ -58,7 +57,7 @@ public class World : NetworkBehaviour
     public Vector3 gridCellSize;
 
     public Tile[] tileList;
-    private Tilemap tilemap;
+    private Tilemap Tilemap;
 
 
     public override void OnStartServer()
@@ -87,12 +86,12 @@ public class World : NetworkBehaviour
     private void GenerateWorld()
     {
         Random.InitState((int)seed);
-        tilemap = GetComponentInChildren<Tilemap>();
-        tilemap.ClearAllTiles();
+        Tilemap = GetComponentInChildren<Tilemap>();
+        Tilemap.ClearAllTiles();
 
-        gridCellSize = tilemap.layoutGrid.cellSize;
+        gridCellSize = Tilemap.layoutGrid.cellSize;
 
-        tilemap.size = new Vector3Int(worldParameters.width, worldParameters.height, 1);
+        Tilemap.size = new Vector3Int(worldParameters.width, worldParameters.height, 1);
         overlayGrid = new Grid(worldParameters.width, worldParameters.height, gridCellSize.x, new Vector3(0, 0, 0));
         for (int i = 0; i < worldParameters.width; i++)
         {
@@ -100,9 +99,26 @@ public class World : NetworkBehaviour
             {
                 int tileID = Random.Range(0, tileList.Length);
                 overlayGrid.SetValue(i, j, tileID);
-                tilemap.SetTile(new Vector3Int(i, j, 0), tileList[tileID]);
+                Tilemap.SetTile(new Vector3Int(i, j, 0), tileList[tileID]);
             }
         }
+    }
+
+    public bool WorldIsEmpty()
+    {
+        if (overlayGrid == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public int getTileIDfromWorldPosition(Vector3 worldPosition)
+    {
+        float x = worldPosition.x;
+        float y = worldPosition.y;
+
+        return overlayGrid.GetValue((int) (x*gridCellSize.x), (int) (y * gridCellSize.y));
     }
 
 }

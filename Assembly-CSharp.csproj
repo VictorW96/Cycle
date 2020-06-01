@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Grid.cs" />
+    <Compile Include="Assets\Scripts\HUDUpdater.cs" />
     <Compile Include="Assets\Scripts\JoinLobbyMenu.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\NetworkGamePlayerLobby.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets\Scripts\NetworkRoomPlayerLobby.cs" />
     <Compile Include="Assets\Scripts\PlayerCamera.cs" />
     <Compile Include="Assets\Scripts\PlayerNameInput.cs" />
+    <Compile Include="Assets\Scripts\TileInformation.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
