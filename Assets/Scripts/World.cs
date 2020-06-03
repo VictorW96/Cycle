@@ -114,10 +114,12 @@ public class World : NetworkBehaviour
 
     public int getTileIDfromWorldPosition(Vector3 worldPosition)
     {
-        float x = worldPosition.x;
-        float y = worldPosition.y;
+        float x = worldPosition.x/gridCellSize.x;
+        float y = worldPosition.y/gridCellSize.y;
 
-        return overlayGrid.GetValue((int) (x*gridCellSize.x), (int) (y * gridCellSize.y));
+
+
+        return overlayGrid.GetValue((int) x, (int) y);
     }
 
 }
