@@ -45,12 +45,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Floor
-    uniqueID: 3131993583
+  - name: World
+    uniqueID: 3343258877
     locked: 0
-  - name: Items
+  - name: Buildings
     uniqueID: 1861650685
     locked: 0
   - name: Units
     uniqueID: 3393972251
+    locked: 0
+  - name: UI
+    uniqueID: 878432567
     locked: 0

@@ -62,3 +62,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  PlayerCamera: {fileID: 6988812824261307619, guid: bd2a1e38e1865ea4fb198c126dffa7a2,
+    type: 3}

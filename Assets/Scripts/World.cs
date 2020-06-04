@@ -3,12 +3,13 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 public class World : NetworkBehaviour
-{
+{ 
     public static World _instance;
     public static World Instance
     {
@@ -17,12 +18,6 @@ public class World : NetworkBehaviour
             if (_instance == null)
             {
                 _instance = GameObject.FindObjectOfType<World>();
-
-                if (_instance == null)
-                {
-                    GameObject container = new GameObject("WorldGrid");
-                    _instance = container.AddComponent<World>();
-                }
             }
 
             return _instance;
@@ -43,8 +38,6 @@ public class World : NetworkBehaviour
     public WorldParameters worldParameters;
     public GameObject PlayerCamera;
 
-    private bool worldGenerated;
-
     [SyncVar]
     private float seed;
 
@@ -56,20 +49,32 @@ public class World : NetworkBehaviour
     public Vector3 gridCellSize;
 
     public Tile[] tileList;
-    private Tilemap Tilemap;
-
+    private Tilemap ground;
+    private Tilemap buildings;
 
     public override void OnStartServer()
     {
+        GetTilemaps();
         seed = 1000000 * Random.value;
         readWorldParameters();
         GenerateWorld();
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public override void OnStartClient()
     {
+        GetTilemaps();
         GenerateWorld();
-        Instantiate(PlayerCamera);
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    private void GetTilemaps()
+    {
+        GameObject groundGO = gameObject.transform.Find("Ground").gameObject;
+        GameObject buildingsGO = gameObject.transform.Find("Buildings").gameObject;
+
+        ground = groundGO.GetComponent<Tilemap>();
+        buildings = buildingsGO.GetComponent<Tilemap>();
     }
 
     private void readWorldParameters()
@@ -85,12 +90,11 @@ public class World : NetworkBehaviour
     private void GenerateWorld()
     {
         Random.InitState((int)seed);
-        Tilemap = GetComponentInChildren<Tilemap>();
-        Tilemap.ClearAllTiles();
+        ground.ClearAllTiles();
 
-        gridCellSize = Tilemap.layoutGrid.cellSize;
+        gridCellSize = ground.layoutGrid.cellSize;
 
-        Tilemap.size = new Vector3Int(worldParameters.width, worldParameters.height, 1);
+        ground.size = new Vector3Int(worldParameters.width, worldParameters.height, 1);
         overlayGrid = new Grid(worldParameters.width, worldParameters.height, gridCellSize.x, new Vector3(0, 0, 0));
         for (int i = 0; i < worldParameters.width; i++)
         {
@@ -98,7 +102,7 @@ public class World : NetworkBehaviour
             {
                 int tileID = Random.Range(0, tileList.Length);
                 overlayGrid.SetValue(i, j, tileID);
-                Tilemap.SetTile(new Vector3Int(i, j, 0), tileList[tileID]);
+                ground.SetTile(new Vector3Int(i, j, 0), tileList[tileID]);
             }
         }
     }

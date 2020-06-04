@@ -5,14 +5,13 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public float panSpeed = 10f;
-    public float panBorderThickness = 10f;
-    public float scrollSpeed = 4f;
+    [SerializeField] private float panSpeed = 10f;
+    [SerializeField] private float panBorderThickness = 10f;
+    [SerializeField] private float scrollSpeed = 4f;
 
-    public float minSize = 2;
-    public float maxSize = 8;
+    [SerializeField] private float minSize = 2;
+    [SerializeField] private float maxSize = 8;
 
-    private World world;
     private static Vector3 gridCellSize;
 
     private Vector3 worldMiddle;
@@ -27,7 +26,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void Start()
     {
-        world = World.Instance;
+        World world = World.Instance;
         int width = world.worldParameters.width;
         int height = world.worldParameters.height;
         gridCellSize = world.gridCellSize;

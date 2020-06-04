@@ -130,6 +130,9 @@ public class NetworkManagerLobby : NetworkManager
         
         if (newSceneName == "Scene/Game01Scene")
         {
+            var worldGridInstance = Instantiate(worldGrid);
+            NetworkServer.Spawn(worldGridInstance);
+
             for (int i = RoomPlayers.Count -1; i >=0; i--)
             {
                 var conn = RoomPlayers[i].connectionToClient;
@@ -147,10 +150,10 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void OnServerSceneChanged(string sceneName)
     {
-        if (sceneName == "Scene/Game01Scene")
+        for (int i = GamePlayers.Count - 1; i >= 0; i--)
         {
-            var worldGridInstance = Instantiate(worldGrid);
-            NetworkServer.Spawn(worldGridInstance);
+            var gameplayer = GamePlayers[i];
+            gameplayer.AfterWorldGeneration();
         }
     }
 

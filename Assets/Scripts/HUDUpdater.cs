@@ -8,14 +8,14 @@ using UnityEngine.UIElements;
 public class HUDUpdater : MonoBehaviour
 {
     private Camera cam;
-    private World world;
+
     [SerializeField] private TMP_Text tileNameText;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
-        world = World.Instance;
+
     }
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class HUDUpdater : MonoBehaviour
 
     IEnumerator updateOnMousePosition()
     {
-        if (world.WorldIsEmpty())
+        if (World.Instance.WorldIsEmpty())
         {
             yield break;
         }
@@ -38,7 +38,7 @@ public class HUDUpdater : MonoBehaviour
         mousePos.y = mousePosition.y;
 
         Vector3 point = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
-        int tileID = world.getTileIDfromWorldPosition(point);
+        int tileID = World.Instance.getTileIDfromWorldPosition(point);
         string displayName = TileInformation.tileDictionary[tileID];
 
         tileNameText.text = displayName;
