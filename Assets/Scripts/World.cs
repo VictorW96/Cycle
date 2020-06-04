@@ -100,7 +100,7 @@ public class World : NetworkBehaviour
         {
             for (int j = 0; j < worldParameters.height; j++)
             {
-                int tileID = Random.Range(0, tileList.Length);
+                int tileID = Random.Range(0, tileList.Length-1); // ToDo Change to tiles for World Generation
                 overlayGrid.SetValue(i, j, tileID);
                 ground.SetTile(new Vector3Int(i, j, 0), tileList[tileID]);
             }
@@ -116,14 +116,27 @@ public class World : NetworkBehaviour
         return false;
     }
 
-    public int getTileIDfromWorldPosition(Vector3 worldPosition)
+    public int GetTileIDfromWorldPosition(Vector3 worldPosition)
     {
-        float x = worldPosition.x/gridCellSize.x;
-        float y = worldPosition.y/gridCellSize.y;
+        Vector3 gridPosition = GetGridPointfromWorldPosition(worldPosition);
 
+        return overlayGrid.GetValue((int) gridPosition.x, (int) gridPosition.y);
+    }
 
+    public Vector3 GetGridPointfromWorldPosition(Vector3 worldPosition)
+    {
+        float x = worldPosition.x / gridCellSize.x;
+        float y = worldPosition.y / gridCellSize.y;
 
-        return overlayGrid.GetValue((int) x, (int) y);
+        return new Vector3(x, y, worldPosition.z);
+    }
+
+    [Server]
+    public void SetBuilding(Vector3 position, int tileId)
+    {
+        Vector3Int buildingPosition = new Vector3Int((int)position.x, (int)position.y, 0);
+        buildings.SetTile(buildingPosition , tileList[tileId]);
+        overlayGrid.SetValue(buildingPosition, tileId);
     }
 
 }

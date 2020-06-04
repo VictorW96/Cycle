@@ -7,14 +7,14 @@ using UnityEngine.UIElements;
 
 public class HUDUpdater : MonoBehaviour
 {
-    private Camera cam;
+    private Camera mainCamera;
 
     [SerializeField] private TMP_Text tileNameText;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
+        mainCamera = Camera.main;
 
     }
 
@@ -30,6 +30,10 @@ public class HUDUpdater : MonoBehaviour
         {
             yield break;
         }
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
 
         Vector3 mousePosition = Input.mousePosition;
         Vector2 mousePos;
@@ -37,8 +41,8 @@ public class HUDUpdater : MonoBehaviour
         mousePos.x = mousePosition.x;
         mousePos.y = mousePosition.y;
 
-        Vector3 point = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
-        int tileID = World.Instance.getTileIDfromWorldPosition(point);
+        Vector3 point = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, mainCamera.nearClipPlane));
+        int tileID = World.Instance.GetTileIDfromWorldPosition(point);
         string displayName = TileInformation.tileDictionary[tileID];
 
         tileNameText.text = displayName;
@@ -53,12 +57,12 @@ public class HUDUpdater : MonoBehaviour
         // Get the mouse position from Event.
         // Note that the y position from Event is inverted.
         mousePos.x = currentEvent.mousePosition.x;
-        mousePos.y = cam.pixelHeight - currentEvent.mousePosition.y;
+        mousePos.y = mainCamera.pixelHeight - currentEvent.mousePosition.y;
 
-        point = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
+        point = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, mainCamera.nearClipPlane));
 
         GUILayout.BeginArea(new Rect(20, 20, 250, 120));
-        GUILayout.Label("Screen pixels: " + cam.pixelWidth + ":" + cam.pixelHeight);
+        GUILayout.Label("Screen pixels: " + mainCamera.pixelWidth + ":" + mainCamera.pixelHeight);
         GUILayout.Label("Mouse position: " + mousePos);
         GUILayout.Label("World position: " + point.ToString("F3"));
         GUILayout.EndArea();

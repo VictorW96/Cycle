@@ -148,15 +148,6 @@ public class NetworkManagerLobby : NetworkManager
 
     }
 
-    public override void OnServerSceneChanged(string sceneName)
-    {
-        for (int i = GamePlayers.Count - 1; i >= 0; i--)
-        {
-            var gameplayer = GamePlayers[i];
-            gameplayer.AfterWorldGeneration();
-        }
-    }
-
 }
 
 

@@ -22,22 +22,42 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
 
     private void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //    if (world.WorldIsEmpty())
-        //    {
-        //        yield break;
-        //    }
+        if (Input.GetMouseButtonDown(0))
+        { 
+            if (World.Instance.WorldIsEmpty())
+            {
+                return;
+            }
+            if (mainCamera == null)
+            {
+                mainCamera = Camera.main;
+            }
 
-        //    Vector3 mousePosition = Input.mousePosition;
-        //    Vector2 mousePos;
-    
-        //    mousePos.x = mousePosition.x;
-        //    mousePos.y = mousePosition.y;
+            Vector3 mousePosition = Input.mousePosition;
+            Vector2 mousePos;
 
-        //    Vector3 point = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
-        //    int tileID = world.getTileIDfromWorldPosition(point);
-        //    string displayName = TileInformation.tileDictionary[tileID];
+            mousePos.x = mousePosition.x;
+            mousePos.y = mousePosition.y;
 
+            Vector3 point = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, mainCamera.nearClipPlane));
+            CmdBuildTown(point);
+        }
+
+    }
+
+    [Command]
+    private void CmdBuildTown(Vector3 point)
+    {
+        Vector3 gridPosition = World.Instance.GetGridPointfromWorldPosition(point);
+        World.Instance.SetBuilding(gridPosition, 20); // hardcoded
+        RpcBuildTown(gridPosition);
+
+    }
+
+    [ClientRpc]
+    private void RpcBuildTown(Vector3 point)
+    {
+        World.Instance.SetBuilding(point, 20);// hardcoded
     }
 
     public override void OnStartClient()
@@ -45,6 +65,9 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
         Room.GamePlayers.Add(this);
 
+        GameObject thiscamera = Instantiate(PlayerCamera);
+        DontDestroyOnLoad(thiscamera);
+        mainCamera = Camera.main;
     }
 
     public override void OnStopClient()
@@ -61,13 +84,6 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
     [Command]
     private void CmdChangeTile()
     {
-
-    }
-
-    public void AfterWorldGeneration()
-    {
-        Instantiate(PlayerCamera);
-        mainCamera = Camera.main;
 
     }
 

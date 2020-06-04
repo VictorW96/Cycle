@@ -26,6 +26,7 @@ public class TileInformation
                                                 {17,"Forest"},
                                                 {18, "Grassland"},
                                                 {19,"Grassland"},
+                                                {20,"Town"},
                                             };
 
 }
