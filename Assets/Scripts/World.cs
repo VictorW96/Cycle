@@ -58,14 +58,14 @@ public class World : NetworkBehaviour
         seed = 1000000 * Random.value;
         readWorldParameters();
         GenerateWorld();
-        DontDestroyOnLoad(this.gameObject);
+        
     }
 
     public override void OnStartClient()
     {
         GetTilemaps();
         GenerateWorld();
-        DontDestroyOnLoad(this.gameObject);
+        Instantiate(PlayerCamera);
     }
 
     private void GetTilemaps()
@@ -131,12 +131,11 @@ public class World : NetworkBehaviour
         return new Vector3(x, y, worldPosition.z);
     }
 
-    [Server]
     public void SetBuilding(Vector3 position, int tileId)
     {
         Vector3Int buildingPosition = new Vector3Int((int)position.x, (int)position.y, 0);
         buildings.SetTile(buildingPosition , tileList[tileId]);
-        overlayGrid.SetValue(buildingPosition, tileId);
+        overlayGrid.SetValue(buildingPosition.x,buildingPosition.y, tileId);
     }
 
 }

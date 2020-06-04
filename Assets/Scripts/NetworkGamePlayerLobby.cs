@@ -65,8 +65,6 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
         Room.GamePlayers.Add(this);
 
-        GameObject thiscamera = Instantiate(PlayerCamera);
-        DontDestroyOnLoad(thiscamera);
         mainCamera = Camera.main;
     }
 
@@ -81,10 +79,6 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
         this.displayName = displayName;
     }
 
-    [Command]
-    private void CmdChangeTile()
-    {
 
-    }
 
 }
